@@ -1,6 +1,6 @@
 {
   "name": "csp-gen",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "generates a csp from a JSON file",
   "main": "index.js",
   "dependencies": {},
