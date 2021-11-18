@@ -31,21 +31,14 @@ const validateSource = (
         return false;
       }
       // Condition: When a key is a known key-only-directive, it's value must be an empty array
-      if (
-        keyOnlyDirectives.includes(key) &&
-        ((input as Source)[key as CspDirectiveKey] as string[]).length > 0
-      ) {
+      if (keyOnlyDirectives.includes(key) && ((input as Source)[key as CspDirectiveKey] as string[]).length > 0) {
         return false;
       }
       // Condition: value of known (non key-only) CSP directive must contain only CSP keywords or domain-like strings (more then 3 letters, with at least one dot)
       if (
-        (!keyOnlyDirectives.includes(key) &&
-          ((input as Source)[key as CspDirectiveKey] as string[]).length ===
-            0) ||
+        (!keyOnlyDirectives.includes(key) && ((input as Source)[key as CspDirectiveKey] as string[]).length === 0) ||
         !(input as any)[key as any].every(
-          (value: string) =>
-            Object.values(CspKeywords).includes(value) ||
-            (value.includes(".") && value.length > 3)
+          (value: string) => Object.values(CspKeywords).includes(value) || (value.includes(".") && value.length > 3)
         )
       ) {
         return false;
@@ -59,19 +52,17 @@ const validateSource = (
   return { valid: true, source: input as Source };
 };
 
-const reduceCspObjectToString =
-  (source: Source) => (csp: string, directiveKey: string) => {
-    const key = directiveKey as CspDirectiveKey;
-    if (keyOnlyDirectives.includes(key)) {
-      csp += `${key}; `;
-    } else {
-      csp += `${key} ${(source[key] as string[]).join(" ")}; `;
-    }
-    return csp;
-  };
+const reduceCspObjectToString = (source: Source) => (csp: string, directiveKey: string) => {
+  const key = directiveKey as CspDirectiveKey;
+  if (keyOnlyDirectives.includes(key)) {
+    csp += `${key}; `;
+  } else {
+    csp += `${key} ${(source[key] as string[]).join(" ")}; `;
+  }
+  return csp;
+};
 
-export const generate = (filepath: string): string => {
-  const input = JSON.parse(readFileSync(filepath, "utf-8"));
+export const generate = (input: unknown): string => {
   const validationResult = validateSource(input);
 
   if (!validationResult.valid) {

@@ -1,0 +1,3 @@
+{
+  "script-src": ["'self'", "www.example.com"]
+}

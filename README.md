@@ -1,6 +1,6 @@
 # csp-gen
 
-csp-gen generates a valid Content-Security-Policy header from a JSON file after checking the inputs for validity (see below)
+csp-gen generates a valid Content-Security-Policy header from a JavaScript object after checking the inputs for validity (see below)
 
 ## Installation
 
@@ -12,10 +12,10 @@ $ npm i csp-gen --save
 
 ## Usage by example
 
-For a JSON file like this (saved in the project folder as e.g. `csp.json`)
+For a JavaScript object like this
 
-```json
-{
+```js
+const input = {
   "connect-src": ["'self'", "api.example.com"],
   "default-src": ["'none'"],
   "font-src": ["'self'"],
@@ -23,15 +23,15 @@ For a JSON file like this (saved in the project folder as e.g. `csp.json`)
   "frame-ancestors": ["'none'"],
   "frame-src": ["'none'"],
   "img-src": ["'self'", "*.example.com"]
-}
+};
 ```
 
 In Node.js run:
 
 ```js
-var csp = require("csp-gen");
+const csp = require("csp-gen");
 
-const policyString = csp.generate("./csp.json");
+const policyString = csp.generate(input);
 ```
 
 now `policyString` will look like this
@@ -99,7 +99,7 @@ csp-gen runs checks on the input file and throws an error if input does not matc
 
 ### Exceptions:
 
-The following directives must not contain values (for the input JSON those can be added as `directive: []` e.g. `upgrade-insecure-requests: []`
+The following directives must not contain values (in the input object those can be added as `directive: []` e.g. `upgrade-insecure-requests: []`
 
 - upgrade-insecure-requests
 - block-all-mixed-content
