@@ -5,7 +5,7 @@ describe("index", () => {
   it("generates a pretty standard secure csp", () => {
     const csp = generate("./test/mixed-directives.json");
     expect(csp).to.equal(
-      "base-uri 'none'; block-all-mixed-content; connect-src 'self' api.r0bs.net; default-src api.xs2a.com; font-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' *.foo.bar; manifest-src 'self'; media-src 'none'; navigate-to 'self' r0bs.net; object-src 'none'; script-src 'self' www.r0bs.net; style-src 'self'; worker-src 'none'; "
+      "connect-src 'self' api.example.com; default-src 'none'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' *.example.com; manifest-src 'self'; media-src 'none'; navigate-to 'self' example.com; object-src 'none'; script-src 'self' www.example.com; style-src 'self'; worker-src 'none'; "
     );
   });
 
@@ -14,7 +14,9 @@ describe("index", () => {
   });
 
   it("failes validation because of empty a non empty key only directive", () => {
-    expect(() => generate("./test/non-empty-key-only-directive.json")).to.throw();
+    expect(() =>
+      generate("./test/non-empty-key-only-directive.json")
+    ).to.throw();
   });
 
   it("failes because directive is not known", () => {
