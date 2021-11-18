@@ -1,6 +1,6 @@
 # csp-gen
 
-csp-gen generates a valid Content-Security-Policy header from a JSON file
+csp-gen generates a valid Content-Security-Policy header from a JSON file after checking the inputs for validity (see below)
 
 ## Installation
 
@@ -12,7 +12,7 @@ $ npm i csp-gen --save
 
 ## Usage by example
 
-For a JSON file (let's save it in the project folder as `csp.json`
+For a JSON file like this (saved in the project folder as e.g. `csp.json`)
 
 ```json
 {
@@ -34,7 +34,7 @@ var csp = require("csp-gen");
 const policyString = csp.generate("./csp.json");
 ```
 
-`policyString` will look like this
+now `policyString` will look like this
 
 ```text
 connect-src 'self' api.example.com; default-src 'none'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' *.example.com;
