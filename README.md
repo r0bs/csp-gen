@@ -1,6 +1,6 @@
 # csp-gen
 
-csp-gen generates a valid csp string from a JSON file
+csp-gen generates a valid Content-Security-Policy header from a JSON file
 
 ## Installation
 
