@@ -1,0 +1,18 @@
+{
+  "base-uri": ["'none'"],
+  "block-all-mixed-content": [],
+  "connect-src": ["'self'", "api.r0bs.net"],
+  "default-src": ["api.xs2a.com"],
+  "font-src": ["'self'"],
+  "form-action": ["'self'"],
+  "frame-ancestors": ["'none'"],
+  "frame-src": ["'none'"],
+  "img-src": ["'self'", "*.foo.bar"],
+  "manifest-src": ["'self'"],
+  "media-src": ["'none'"],
+  "navigate-to": ["'self'", "r0bs.net"],
+  "object-src": ["'none'"],
+  "script-src": ["'self'", "www.r0bs.net"],
+  "style-src": ["'self'"],
+  "worker-src": ["'none'"]
+}

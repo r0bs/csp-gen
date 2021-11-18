@@ -1,0 +1,34 @@
+{
+  "name": "csp-generator",
+  "version": "1.0.0",
+  "description": "generates a csp from a JSON file",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chai": "4.2.22",
+    "@types/mocha": "9.0.0",
+    "@types/node": "16.11.7",
+    "chai": "4.3.4",
+    "ts-mocha": "8.0.0",
+    "typescript": "4.5.2"
+  },
+  "scripts": {
+    "test": "npx ts-mocha --extension .spec.ts --recursive ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r0bs/csp-generator.git"
+  },
+  "keywords": [
+    "csp",
+    "header",
+    "security",
+    "content-security-policy"
+  ],
+  "author": "r0bs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/r0bs/csp-generator/issues"
+  },
+  "homepage": "https://github.com/r0bs/csp-generator#readme"
+}
