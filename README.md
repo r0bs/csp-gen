@@ -42,7 +42,7 @@ connect-src 'self' api.example.com; default-src 'none'; font-src 'self'; form-ac
 
 ## Why csp-gen?
 
-csp-gen is a dependency-free library that checks the file data for supported CSP terminology (see below) and generates a ready-to-use policy string
+csp-gen is a dependency-free library that checks the input data for supported CSP terminology (see below) and generates a ready-to-use policy string
 
 - Checks for errors and typos in input data during runtime and via type check
 - 0 dependencies (no transitional pulling of npm packages)
