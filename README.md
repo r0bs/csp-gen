@@ -42,15 +42,15 @@ connect-src 'self' api.example.com; default-src 'none'; font-src 'self'; form-ac
 
 ## Why csp-gen?
 
-csp-gen is a dependency-free library that checks the input file for supported CSP terminology (see below) and generates a ready-to-use policy string
+csp-gen is a dependency-free library that checks the file data for supported CSP terminology (see below) and generates a ready-to-use policy string
 
-- Checks for typos & errors in input files
+- Checks for errors and typos in input data during runtime and via type check
 - 0 dependencies (no transitional pulling of npm packages)
 - Creates ready-to-use Content-Security-Policy
 
 ## Checks
 
-csp-gen runs checks on the input file and throws an error if input does not match with what can be a valid Content-Security-Policy
+csp-gen runs checks on the input data and throws an error if input does not match with what can be a valid Content-Security-Policy
 
 ### Allowed directive names:
 
@@ -74,12 +74,12 @@ csp-gen runs checks on the input file and throws an error if input does not matc
 - require-sri-for
 - require-trusted-types-for
 - sandbox
+- script-src
 - script-src-attr
 - script-src-elem
-- script-src
+- style-src
 - style-src-attr
 - style-src-elem
-- style-src
 - trusted-types
 - upgrade-insecure-requests
 - worker-src
@@ -101,5 +101,5 @@ csp-gen runs checks on the input file and throws an error if input does not matc
 
 The following directives must not contain values (in the input object those can be added as `directive: []` e.g. `upgrade-insecure-requests: []`
 
-- upgrade-insecure-requests
 - block-all-mixed-content
+- upgrade-insecure-requests
