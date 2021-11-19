@@ -1,5 +1,53 @@
 import { readFileSync } from "fs";
-import { CspDirectiveKeys, CspKeywords, KeyOnlyDirectives } from "./csp-terms";
+
+enum CspKeywords {
+  "'none'",
+  "'report-sample'",
+  "'self'",
+  "'strict-dynamic'",
+  "'unsafe-allow-redirects'",
+  "'unsafe-eval'",
+  "'unsafe-hashes'",
+  "'unsafe-inline'",
+  "data:",
+}
+
+enum CspDirectiveKeys {
+  "base-uri",
+  "block-all-mixed-content",
+  "connect-src",
+  "default-src",
+  "font-src",
+  "form-action",
+  "frame-ancestors",
+  "frame-src",
+  "img-src",
+  "manifest-src",
+  "media-src",
+  "navigate-to",
+  "object-src",
+  "plugin-types",
+  "prefetch-src",
+  "report-to",
+  "report-uri",
+  "require-sri-for",
+  "require-trusted-types-for",
+  "sandbox",
+  "script-src-attr",
+  "script-src-elem",
+  "script-src",
+  "style-src-attr",
+  "style-src-elem",
+  "style-src",
+  "trusted-types",
+  "upgrade-insecure-requests",
+  "worker-src",
+}
+
+enum KeyOnlyDirectives {
+  "block-all-mixed-content",
+  "upgrade-insecure-requests",
+}
 
 /**
  * TypeScript's Object.values(enum) creates an array
@@ -11,8 +59,8 @@ const cspDirectiveNames = Object.values(CspDirectiveKeys);
 
 type CspDirectiveKey = keyof typeof CspDirectiveKeys;
 
-type Source = {
-  [k in CspDirectiveKey]: keyof typeof CspKeywords[] | string[];
+export type CspSource = {
+  [k in CspDirectiveKey]?: keyof typeof CspKeywords[] | string[];
 };
 
 const validateSource = (
@@ -20,7 +68,7 @@ const validateSource = (
 ):
   | {
       valid: true;
-      source: Source;
+      source: CspSource;
     }
   | { valid: false } => {
   const valid =
@@ -31,12 +79,12 @@ const validateSource = (
         return false;
       }
       // Condition: When a key is a known key-only-directive, it's value must be an empty array
-      if (keyOnlyDirectives.includes(key) && ((input as Source)[key as CspDirectiveKey] as string[]).length > 0) {
+      if (keyOnlyDirectives.includes(key) && ((input as CspSource)[key as CspDirectiveKey] as string[]).length > 0) {
         return false;
       }
       // Condition: value of known (non key-only) CSP directive must contain only CSP keywords or domain-like strings (more then 3 letters, with at least one dot)
       if (
-        (!keyOnlyDirectives.includes(key) && ((input as Source)[key as CspDirectiveKey] as string[]).length === 0) ||
+        (!keyOnlyDirectives.includes(key) && ((input as CspSource)[key as CspDirectiveKey] as string[]).length === 0) ||
         !(input as any)[key as any].every(
           (value: string) => Object.values(CspKeywords).includes(value) || (value.includes(".") && value.length > 3)
         )
@@ -49,10 +97,10 @@ const validateSource = (
   if (!valid) {
     return { valid: false };
   }
-  return { valid: true, source: input as Source };
+  return { valid: true, source: input as CspSource };
 };
 
-const reduceCspObjectToString = (source: Source) => (csp: string, directiveKey: string) => {
+const reduceCspObjectToString = (source: CspSource) => (csp: string, directiveKey: string) => {
   const key = directiveKey as CspDirectiveKey;
   if (keyOnlyDirectives.includes(key)) {
     csp += `${key}; `;
@@ -62,7 +110,7 @@ const reduceCspObjectToString = (source: Source) => (csp: string, directiveKey: 
   return csp;
 };
 
-export const generate = (input: unknown): string => {
+export const generate = (input: CspSource): string => {
   const validationResult = validateSource(input);
 
   if (!validationResult.valid) {

@@ -1,4 +1,4 @@
-export enum CspKeywords {
+enum CspKeywords {
   "'none'",
   "'report-sample'",
   "'self'",
@@ -10,7 +10,7 @@ export enum CspKeywords {
   "data:",
 }
 
-export enum CspDirectiveKeys {
+enum CspDirectiveKeys {
   "base-uri",
   "block-all-mixed-content",
   "connect-src",
@@ -42,7 +42,7 @@ export enum CspDirectiveKeys {
   "worker-src",
 }
 
-export enum KeyOnlyDirectives {
+enum KeyOnlyDirectives {
   "block-all-mixed-content",
   "upgrade-insecure-requests",
 }
