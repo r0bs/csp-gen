@@ -1,6 +1,6 @@
 # csp-gen
 
-csp-gen generates a valid Content-Security-Policy header from a JavaScript object after checking the inputs for validity (see below)
+csp-gen generates a valid Content-Security-Policy header from a JavaScript object after checking the inputs for conformity with allowed CSP directive names, keywords and values (see below)
 
 ## Installation
 
@@ -44,13 +44,13 @@ connect-src 'self' api.example.com; default-src 'none'; font-src 'self'; form-ac
 
 csp-gen is a dependency-free library that checks the input data for supported CSP terminology (see below) and generates a ready-to-use policy string
 
-- Checks for errors and typos in input data during runtime and via type check
+- Checks for errors and typos in input data during runtime and type checks input parameters
 - 0 dependencies (no transitional pulling of npm packages)
 - Creates ready-to-use Content-Security-Policy
 
 ## Checks
 
-csp-gen runs checks on the input data and throws an error if input does not match with what can be a valid Content-Security-Policy
+csp-gen runs checks on the input data and throws an error if input does not match with what can be a valid Content-Security-Policy. Input types are checked by exposing an TypeScript interface to the editor or IDE.
 
 ### Allowed directive names:
 
@@ -86,7 +86,7 @@ csp-gen runs checks on the input data and throws an error if input does not matc
 
 ### Allowed directive values:
 
-- every _domain-like_ string (needs to be more than 3 charaters long & contain at least one dot)
+- every _domain-like_ string (needs to be more than 3 characters long and contain at least one dot)
 - 'none'
 - 'report-sample'
 - 'self'
@@ -99,7 +99,7 @@ csp-gen runs checks on the input data and throws an error if input does not matc
 
 ### Exceptions:
 
-The following directives must not contain values (in the input object those can be added as `directive: []` e.g. `upgrade-insecure-requests: []`
+The following directives must not contain values. In the input object those can be added with an empty array as value, e.g. `directive: []` or `upgrade-insecure-requests: []`
 
 - block-all-mixed-content
 - upgrade-insecure-requests
