@@ -1,15 +1,13 @@
 import { expect } from "chai";
-import { generate } from ".";
+import { CspSource, generate } from ".";
 import { readFileSync } from "fs";
 
 describe("index", () => {
   it("generates a short csp", () => {
     const csp = generate(JSON.parse(readFileSync("./test/one-directive.json", "utf-8")));
-    expect(csp).to.equal(
-      "script-src 'self' www.example.com; "
-    );
-  });  
-  
+    expect(csp).to.equal("script-src 'self' www.example.com; ");
+  });
+
   it("generates a pretty standard secure csp", () => {
     const csp = generate(JSON.parse(readFileSync("./test/mixed-directives.json", "utf-8")));
     expect(csp).to.equal(
@@ -17,21 +15,33 @@ describe("index", () => {
     );
   });
 
+  it("failes validation because input is not an object", () => {
+    expect(() => generate("" as CspSource))
+      .to.throw()
+      .with.property("message", "Input must be an object");
+  });
+
   it("failes validation because of empty standard directive", () => {
-    expect(() => generate(JSON.parse(readFileSync("./test/empty-directive.json", "utf-8")))).to.throw();
+    expect(() => generate(JSON.parse(readFileSync("./test/empty-directive.json", "utf-8"))))
+      .to.throw()
+      .with.property("message", "Invalid value for 'style-src'");
   });
 
   it("failes validation because of empty a non empty key only directive", () => {
-    expect(() =>
-      generate(JSON.parse(readFileSync("./test/non-empty-keyonly-directive.json", "utf-8")))
-    ).to.throw();
+    expect(() => generate(JSON.parse(readFileSync("./test/non-empty-keyonly-directive.json", "utf-8"))))
+      .to.throw()
+      .with.property("message", "Key-only directive 'block-all-mixed-content' must have an empty array as value");
   });
 
   it("failes because directive is not known", () => {
-    expect(() => generate(JSON.parse(readFileSync("./test/wrong-key.json", "utf-8")))).to.throw();
+    expect(() => generate(JSON.parse(readFileSync("./test/wrong-key.json", "utf-8"))))
+      .to.throw()
+      .with.property("message", "Unknown directive 'wrong-key'");
   });
 
-  it("failes because of a wrong value in a standard directive", () => {
-    expect(() => generate(JSON.parse(readFileSync("./test/wrong-value.json", "utf-8")))).to.throw();
+  it("failes because of a invalid value in a standard directive", () => {
+    expect(() => generate(JSON.parse(readFileSync("./test/wrong-value.json", "utf-8"))))
+      .to.throw()
+      .with.property("message", "Invalid value for 'script-src'");
   });
 });

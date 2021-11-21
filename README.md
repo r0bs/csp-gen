@@ -22,7 +22,7 @@ const input = {
   "form-action": ["'self'"],
   "frame-ancestors": ["'none'"],
   "frame-src": ["'none'"],
-  "img-src": ["'self'", "*.example.com"]
+  "img-src": ["'self'", "*.example.com"],
 };
 ```
 

@@ -1,3 +1,3 @@
 {
-  "block-all-mixed-content": ["'self'", "foo.bar"]
+  "block-all-mixed-content": ["'self'", "example.com"]
 }

@@ -1,3 +1,4 @@
+import { log } from "console";
 import { readFileSync } from "fs";
 
 enum CspKeywords {
@@ -63,39 +64,36 @@ export type CspSource = {
   [k in CspDirectiveKey]?: keyof typeof CspKeywords[] | string[];
 };
 
-const validateSource = (
-  input: unknown
-):
-  | {
-      valid: true;
-      source: CspSource;
+const validateSource = (input: unknown): { valid: true; source: CspSource } | { valid: false; errors: string[] } => {
+  // Condition: input must be an object
+  if (typeof input !== "object") {
+    return {
+      valid: false,
+      errors: ["Input must be an object"],
+    };
+  }
+  const checks = Object.entries(input as object).map((directive) => {
+    const [directiveKey, directiveValuesArray] = directive;
+    // Condition: key must be a known directive
+    if (!cspDirectiveNames.includes(directiveKey)) {
+      return { valid: false, error: `Unknown directive '${directiveKey}'` };
     }
-  | { valid: false } => {
-  const valid =
-    typeof input === "object" &&
-    Object.keys(input as object).every((key) => {
-      // Condition: key is a known directive
-      if (!cspDirectiveNames.includes(key)) {
-        return false;
-      }
-      // Condition: When a key is a known key-only-directive, it's value must be an empty array
-      if (keyOnlyDirectives.includes(key) && ((input as CspSource)[key as CspDirectiveKey] as string[]).length > 0) {
-        return false;
-      }
-      // Condition: value of known (non key-only) CSP directive must contain only CSP keywords or domain-like strings (more then 3 letters, with at least one dot)
-      if (
-        (!keyOnlyDirectives.includes(key) && ((input as CspSource)[key as CspDirectiveKey] as string[]).length === 0) ||
-        !(input as any)[key as any].every(
-          (value: string) => Object.values(CspKeywords).includes(value) || (value.includes(".") && value.length > 3)
-        )
-      ) {
-        return false;
-      }
-      return true;
-    });
+    // Condition: When a key is a known key-only-directive, it's value must be an empty array
+    if (keyOnlyDirectives.includes(directiveKey) && directiveValuesArray.length > 0) {
+      return { valid: false, error: `Key-only directive '${directiveKey}' must have an empty array as value` };
+    }
+    // Condition: value of known (non key-only) CSP directive must contain only CSP keywords or domain-like strings (more then 3 letters, with at least one dot)
+    if (
+      (!keyOnlyDirectives.includes(directiveKey) && directiveValuesArray.length === 0) ||
+      !directiveValuesArray.every((value: string) => Object.values(CspKeywords).includes(value) || (value.includes(".") && value.length > 3))
+    ) {
+      return { valid: false, error: `Invalid value for '${directiveKey}'` };
+    }
+    return { valid: true, error: "" };
+  });
 
-  if (!valid) {
-    return { valid: false };
+  if (checks.some((check) => !check?.valid)) {
+    return { valid: false, errors: checks.map((check) => check?.error) };
   }
   return { valid: true, source: input as CspSource };
 };
@@ -114,7 +112,7 @@ export const generate = (input: CspSource): string => {
   const validationResult = validateSource(input);
 
   if (!validationResult.valid) {
-    throw new Error("CSP JSON input not valid!");
+    throw new Error(validationResult.errors.join("\n"));
   }
 
   const { source } = validationResult;
