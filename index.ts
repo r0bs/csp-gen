@@ -110,8 +110,6 @@ export const generate = (input: CspSource): string => {
     throw new Error(validationResult.errors.join(", "));
   }
 
-  console.log({ validationResult });
-
   const { source } = validationResult;
 
   return Object.keys(source).reduce(reduceCspObjectToString(source), "");
