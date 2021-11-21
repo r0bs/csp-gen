@@ -39,9 +39,15 @@ describe("index", () => {
       .with.property("message", "Unknown directive 'wrong-key'");
   });
 
-  it("failes because of a invalid value in a standard directive", () => {
+  it("failes because of an invalid value in a standard directive", () => {
     expect(() => generate(JSON.parse(readFileSync("./test/wrong-value.json", "utf-8"))))
       .to.throw()
       .with.property("message", "Invalid value for 'script-src'");
+  });
+
+  it("failes because of multiple errors: an invalid value in a standard directive and an unknown directive", () => {
+    expect(() => generate(JSON.parse(readFileSync("./test/wrong-key-and-value.json", "utf-8"))))
+      .to.throw()
+      .with.property("message", "Invalid value for 'script-src'\nUnknown directive 'wrong-src'");
   });
 });
