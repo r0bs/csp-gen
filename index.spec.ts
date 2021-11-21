@@ -11,7 +11,7 @@ describe("index", () => {
   it("generates a pretty standard secure csp", () => {
     const csp = generate(JSON.parse(readFileSync("./test/mixed-directives.json", "utf-8")));
     expect(csp).to.equal(
-      "connect-src 'self' api.example.com; default-src 'none'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' *.example.com; manifest-src 'self'; media-src 'none'; navigate-to 'self' example.com; object-src 'none'; script-src 'self' www.example.com; style-src 'self'; worker-src 'none'; "
+      "connect-src 'self' api.example.com; default-src 'none'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' *.example.com; manifest-src 'self'; media-src 'none'; navigate-to 'self' example.com; object-src 'none'; script-src 'self' www.example.com; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; "
     );
   });
 
@@ -48,6 +48,6 @@ describe("index", () => {
   it("failes because of multiple errors: an invalid value in a standard directive and an unknown directive", () => {
     expect(() => generate(JSON.parse(readFileSync("./test/wrong-key-and-value.json", "utf-8"))))
       .to.throw()
-      .with.property("message", "Invalid value for 'script-src'\nUnknown directive 'wrong-src'");
+      .with.property("message", "Invalid value for 'script-src', Unknown directive 'wrong-src'");
   });
 });

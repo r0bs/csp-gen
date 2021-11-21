@@ -12,5 +12,6 @@
   "object-src": ["'none'"],
   "script-src": ["'self'", "www.example.com"],
   "style-src": ["'self'"],
-  "worker-src": ["'none'"]
+  "worker-src": ["'none'"],
+  "upgrade-insecure-requests": []
 }
