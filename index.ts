@@ -112,7 +112,7 @@ export const generate = (input: CspSource): string => {
 
   const { source } = validationResult;
 
-  return Object.keys(source).reduce(reduceCspObjectToString(source), "");
+  return Object.keys(source).reduce(reduceCspObjectToString(source), "").trim();
 };
 
 export default generate;
