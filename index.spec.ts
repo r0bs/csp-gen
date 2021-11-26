@@ -4,7 +4,10 @@ import { readFileSync } from "fs";
 
 describe("index", () => {
   it("generates a short csp", () => {
-    const csp = generate(JSON.parse(readFileSync("./test/one-directive.json", "utf-8")));
+    const csp = generate({
+      "script-src": ["'self'", "www.example.com"],
+    });
+
     expect(csp).to.equal("script-src 'self' www.example.com;");
   });
 

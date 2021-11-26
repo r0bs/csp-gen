@@ -56,9 +56,10 @@ const keyOnlyDirectives = Object.values(KeyOnlyDirectives);
 const cspDirectiveNames = Object.values(CspDirectiveKeys);
 
 type CspDirectiveKey = keyof typeof CspDirectiveKeys;
+type CspDirectivePredefinedValue = keyof typeof CspKeywords;
 
 export type CspSource = {
-  [k in CspDirectiveKey]?: keyof typeof CspKeywords[] | string[];
+  [k in CspDirectiveKey]?: CspDirectivePredefinedValue[] | string[];
 };
 
 const validateSource = (input: unknown): { valid: true; source: CspSource } | { valid: false; errors: string[] } => {
@@ -78,7 +79,7 @@ const validateSource = (input: unknown): { valid: true; source: CspSource } | { 
         return `Key-only directive '${directiveKey}' must have an empty array as value`;
       }
       // Condition: value of known (non key-only) CSP directive must contain only CSP keywords or domain-like strings (more then 3 letters, with at least one dot)
-      else if (
+      if (
         (!keyOnlyDirectives.includes(directiveKey) && directiveValuesArray.length === 0) ||
         !directiveValuesArray.every((value: string) => Object.values(CspKeywords).includes(value) || (value.includes(".") && value.length > 3))
       ) {
