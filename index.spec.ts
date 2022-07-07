@@ -18,6 +18,11 @@ describe("index", () => {
     );
   });
 
+  it("generates a csp with a hash", () => {
+    const csp = generate(JSON.parse(readFileSync("./test/hash-directive.json", "utf-8")));
+    expect(csp).to.equal("style-src 'sha256-f12ac5b76ff2aa2da31b2c3b5fdfbfe8';");
+  });
+
   it("failes validation because input is not an object", () => {
     expect(() => generate("" as CspSource))
       .to.throw()

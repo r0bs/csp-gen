@@ -62,6 +62,8 @@ export type CspSource = {
   [k in CspDirectiveKey]?: CspDirectivePredefinedValue[] | string[];
 };
 
+const supportedHashingAlgorithms = ["sha256", "sha384", "sha512"];
+
 const validateSource = (input: unknown): { valid: true; source: CspSource } | { valid: false; errors: string[] } => {
   // Condition: input must be an object
   if (typeof input !== "object") {
@@ -78,10 +80,16 @@ const validateSource = (input: unknown): { valid: true; source: CspSource } | { 
       if (keyOnlyDirectives.includes(directiveKey) && directiveValuesArray.length > 0) {
         return `Key-only directive '${directiveKey}' must have an empty array as value`;
       }
-      // Condition: value of known (non key-only) CSP directive must contain only CSP keywords or domain-like strings (more then 3 letters, with at least one dot)
+      // Condition: value of known (non key-only) CSP directive must contain only CSP keywords, domain-like strings (more then 3 letters, with at least one dot), or strings that begin with the name of a supported hashing algorithm and not contain any dot
       if (
         (!keyOnlyDirectives.includes(directiveKey) && directiveValuesArray.length === 0) ||
-        !directiveValuesArray.every((value: string) => Object.values(CspKeywords).includes(value) || (value.includes(".") && value.length > 3))
+        !directiveValuesArray.every((value: string) => {
+          return (
+            Object.values(CspKeywords).includes(value) || //
+            (value.includes(".") && value.length > 3) ||
+            (supportedHashingAlgorithms.includes(value.substring(1, 7)) && !value.includes("."))
+          );
+        })
       ) {
         return `Invalid value for '${directiveKey}'`;
       }
