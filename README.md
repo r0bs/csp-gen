@@ -87,6 +87,7 @@ csp-gen runs checks on the input data and throws an error if input does not matc
 ### Allowed directive values:
 
 - every _domain-like_ string (needs to be more than 3 characters long and contain at least one dot)
+- hash strings like 'sha256-f12ac5b76ff2aa2da31b2c3b5fdfbfe8', supported hashing algorithms: sha256, sha384, sha512
 - 'none'
 - 'report-sample'
 - 'self'
